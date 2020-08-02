@@ -1,3 +1,26 @@
+======================
+Maven build Life Cycle:
+======================
+Each of these build lifecycles is defined by a different list of build phases, wherein a build phase represents a stage in the lifecycle.
+    validate - validate the project is correct and all necessary information is available
+    compile - compile the source code of the project
+    test - test the compiled source code using a suitable unit testing framework. These tests should not require the code be packaged or deployed
+    package - take the compiled code and package it in its distributable format, such as a JAR.
+    verify - run any checks on results of integration tests to ensure quality criteria are met
+    install - install the package into the local repository, for use as a dependency in other projects locally
+    deploy - done in the build environment, copies the final package to the remote repository for sharing with other developers and projects.===============
+
+===============================
+Seting up jenkin user password:
+===============================
+1- sudo su
+2- passwd jenkins
+3- set the <password>
+4- exit
+5- su - jenkins 
+6- supply <password>
+
+=======================================
 Setup to setup Eclipse in Ubuntu Lab:-
 ------------------------------------------
 1- Open browser: search for eclipse dwonload
