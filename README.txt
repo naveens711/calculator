@@ -186,12 +186,118 @@ Setup the Artifactory plugin in project's pom.xml file
   =================
   1. Go to this page: https://docs.sonarqube.org/latest/setup/get-started-2-minutes/
   2. Download form here: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.8.zip
+      In Terminal:
+      2.1 unzip sonarqube-7.8.zip
+      2.2 cd /home/ubuntu/Downloads/sonarqube-7.8/bin/linux-x86-64
+      2.3 ./sonar.sh console
   3. Go to browser: http://localhost:9000
   4. Login: username- admin
             password- admin
   5. Generate Token: Analyze "com.simplilearn:calculator": 41da3cb9c67b35100c99fee9e89d97a28e18b1a8
   6. Fallow the configuration setup, shown in UI
-  7. mvn sonar:sonar \
-        -Dsonar.projectKey=com.simplilearn:calculator \
-        -Dsonar.host.url=http://localhost:9000 \
-        -Dsonar.login=41da3cb9c67b35100c99fee9e89d97a28e18b1a8
+  7. Add the below profile in settings.xml
+       <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <sonar.host.url>
+                  http://localhost:9000
+                </sonar.host.url>
+            </properties>
+        </profile>
+  8. Add Plugins in porject's pom.xml inside the <project> xml tag:
+   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.6.0.1398</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.4</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>coverage</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>report</id>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>   
+  
+ 
+ 9. mvn clean verify sonar:sonar
+ 10. If above goal successfully run, then it will produce code analysis report URLs. 
+ 
+ 
+ ========================
+ Setup Web Server: Tomcat
+ ========================
+ 1- Download: http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.57/bin/apache-tomcat-8.5.57.tar.gz
+ 2- cd Downloads
+ 3- tar -xvf apache-tomcat-8.5.57.tar.gz
+ 4- cd apache-tomcat-8.5.57
+ 5- vi conf/server.xml [Change all ports]
+      5.1 Replace 8005 to 7005
+            <Server port="7005" shutdown="SHUTDOWN">
+                  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+      5.2 Replace 8080 to 7080 and 8443 to 7443
+            <Connector port="7080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="7443" />
+ 6- vi conf/tomcat-users.xml     [add the below roles and admin password in <tomcat-users> xml tag]
+        <role rolename="manager-gui"/>
+        <role rolename="manager-script"/>
+        <role rolename="manager-jmx"/>
+        <role rolename="manager-status"/>
+        <role rolename="admin-gui"/>
+        <role rolename="admin-script"/>
+        <user username="admin" password="admin" roles="manager-gui,manager-script,manager-jmx,manager-status,admin-gui,admin-script"/>
+
+ 7- Run from terminal  
+      7.1 cd /home/ubuntu/Downloads/apache-tomcat-8.5.57 [your untar location]
+      7.2 ./bin/startup.sh [to start tomcat]
+      7.3 ./bin/shutdown.sh [to stop tomcat]
+ 8- Go to browser, http://localhost:7080 and hit. 
+  
+            
+===========================
+Spring boot Web Application
+===========================
+1- https://start.spring.io
