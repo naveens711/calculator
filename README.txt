@@ -317,3 +317,29 @@ Spring boot Web Application
     3.4 Go to browser
         3.4.1 http://localhost:7080/webappdemo/users/1
                 3.4.1.1 Response: {"id":2,"name":"John","nicknames":["jonny"],"age":26,"email":"john@xyz.com"}
+                
+Continuous Deployment of a war file into a Running Tomcat WebServer via Jenkins Job:
+====================================================================================
+ 1- Go to Manage Plugins
+    1.1 Install `Deploy to container plugin`
+    1.2 Restart Jenkins
+ 2- Go to New item [Jenkins Home Page]
+    2.1 Choose maven style project
+    2.2 SCM
+        2.2.1 Git repo
+        2.2.2 Reporitory URL: https://github.com/cicdTrainer/spring-boot-demo.git
+        2.2.2 Go to `Post-Build-Action`
+            2.2.2.1 Choose Deploy war/ear to a container
+            2.2.2.2 WAR files: **/*.war
+            2.2.2.3 Context path: demo1
+            2.2.2.4 Choose 1tomcat 8.x in Containers list box
+            2.2.2.5 Tomcat URL: http://localhost:70780 [please modify IP/PORT according to your tomcat location]
+            2.2.2.6 Choose Advance
+                2.2.2.6.1 /manager/text
+            2.2.2.7 Cridential, choose Jenkins provider / Add
+                    username: admin
+                    password: admin
+     2.3 Save
+     2.4 Build Job
+  3- Go to browser
+     3.1 http://localhost:7080/demo1/users/1 [hit]   
