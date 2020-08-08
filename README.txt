@@ -343,3 +343,37 @@ Continuous Deployment of a war file into a Running Tomcat WebServer via Jenkins 
      2.4 Build Job
   3- Go to browser
      3.1 http://localhost:7080/demo1/users/1 [hit]   
+=================================================================
+Jenkins Pipeline build for a Web Application:
+============================================
+1- Manually set the pipeline script:
+    node {
+   stage('Prepare') {
+      git 'https://github.com/cicdTrainer/spring-boot-demo.git'
+   }
+   stage('Compile') {
+         sh "'/usr/bin/mvn' -Dmaven.test.failure.ignore clean compile"
+   }
+}
+   
+   
+   Master/Slave:
+   =============
+   1- sudo java -jar agent.jar -jnlpUrl http://localhost:8080/computer/test/slave-agent.jnlp -secret fef4874372892b1f433b4356ef2aa5cef09d3dbd52cef61dff314be99448f381 -workDir "/var/jenkins" 
+   2- To run a pipeline stage into a slave node:
+   pipeline {
+  agent any
+  stages {
+    stage('Stage 1') {
+      steps {
+        echo "${env.NODE_NAME}"
+      }
+    }
+    stage('Stage 2') {
+      agent {label 'test'}
+      steps {
+          echo "${env.NODE_NAME}"
+      }
+    }
+  }
+}
